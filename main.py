@@ -23,8 +23,7 @@ response = client.chat.completions.create(
         {"role": "user", "content": incoming_msg}
     ]
 )
-
-        reply = response.choices[0].message.content.strip()
+ reply = response.choices[0].message.content.strip()
     except Exception as e:
         print(f"[OpenRouter Error] {e}")
 
