@@ -16,13 +16,20 @@ def bot_reply():
     # Default fallback reply
     reply = "Sorry, no reply from AI."
 
-    data = {
-        "model": "openai/gpt-3.5-turbo",
-        "messages": [
-            {"role": "system", "content": "You are a helpful legal aid assistant. Answer briefly and clearly in simple language."},
-            {"role": "user", "content": incoming_msg}
-        ]
-    }
+   data = {
+    "model": "openai/gpt-3.5-turbo",
+    "messages": [
+        {
+            "role": "system",
+            "content": "You are a helpful legal aid assistant. Reply concisely in easy-to-understand language, suitable for common people. Avoid technical jargon."
+        },
+        {
+            "role": "user",
+            "content": incoming_msg
+        }
+    ]
+}
+
 
     headers = {
         "Authorization": f"Bearer {API_KEY}",
