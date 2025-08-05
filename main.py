@@ -1,20 +1,31 @@
+import openai
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 
 app = Flask(__name__)
 
-@app.route("/webhook", methods=["POST"])
-def whatsapp_bot():
-    incoming_msg = request.form.get('Body', '').lower()
-    resp = MessagingResponse()
-    msg = resp.message()
+openai.api_key = "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"
+openai.api_base = "https://openrouter.ai/api/v1"
 
-    # Simple reply logic
-    if 'hello' in incoming_msg:
-        msg.body("Hi! I'm your Flask AI bot 😄")
-    elif 'bye' in incoming_msg:
-        msg.body("Goodbye 👋")
-    else:
-        msg.body("You said: " + incoming_msg)
+@app.route("/", methods=["POST"])
+def bot_reply():
+    incoming_msg = request.values.get("Body", "").strip()
+    print(f"Received message: {incoming_msg}")
 
-    return str(resp)
+    reply = "Sorry, I couldn't respond right now."
+
+    try:
+        response = openai.ChatCompletion.create(
+            model="mistralai/mixtral-8x7b-instruct",  # or another model you're using
+            messages=[
+                {"role": "system", "content": "You are a helpful AI assistant."},
+                {"role": "user", "content": incoming_msg}
+            ]
+        )
+        reply = response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"[OpenRouter Error] {e}")
+
+    twilio_resp = MessagingResponse()
+    twilio_resp.message(reply)
+    return str(twilio_resp)
