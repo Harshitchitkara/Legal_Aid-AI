@@ -23,6 +23,7 @@ def bot_reply():
 
         data = {
             "model": "openrouter/openai/gpt-3.5-turbo",
+            "API"="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"
             "messages": [
                 {"role": "system", "content": "You are a helpful legal advisor chatbot that gives legal aid in easy terms."},
                 {"role": "user", "content": incoming_msg}
