@@ -31,7 +31,7 @@ def bot_reply():
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://whatsapp-legal-bot.onrender.com",  # 🔁 Your actual domain!
+        "HTTP-Referer": "https://legal-aid-ai.onrender.com",  # 🔁 Your actual domain!
         "X-Title": "Whatsapp Legal Bot"
     }
 
