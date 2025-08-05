@@ -5,7 +5,7 @@ import requests
 app = Flask(__name__)
 
 
-API_KEY = "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"
+API_KEY = "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"
 
 @app.route("/", methods=["POST"])
 def bot_reply():
@@ -17,13 +17,12 @@ def bot_reply():
 
     try:
         headers = {
-            "Authorization": f"Bearer {API_KEY}",
+            "Authorization": f"Bearer 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",
             "Content-Type": "application/json"
         }
 
         data = {
             "model": "openrouter/openai/gpt-3.5-turbo",
-            "API"="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"
             "messages": [
                 {"role": "system", "content": "You are a helpful legal advisor chatbot that gives legal aid in easy terms."},
                 {"role": "user", "content": incoming_msg}
