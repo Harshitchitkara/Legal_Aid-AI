@@ -14,18 +14,20 @@ def bot_reply():
 
     reply = "Sorry, I couldn't respond right now."
 
-    try:
-       client = openai.OpenAI(api_key="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")
-response = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": incoming_msg}
-    ]
-)
- reply = response.choices[0].message.content.strip()
-    except Exception as e:
-        print(f"[OpenRouter Error] {e}")
+   try:
+    response = client.chat.completions.create(
+        model="openrouter/openai/gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": incoming_msg}
+        ]
+    )
+
+    reply = response.choices[0].message.content.strip()
+
+except Exception as e:
+    reply = "Sorry, something went wrong."
+    print(f"[OpenRouter Error] {e}")
 
     twilio_resp = MessagingResponse()
     twilio_resp.message(reply)
