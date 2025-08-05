@@ -5,7 +5,7 @@ from twilio.twiml.messaging_response import MessagingResponse
 app = Flask(__name__)
 
 # ✅ Your actual OpenRouter API key (must be enabled and allowed to access the model)
-API_KEY = "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"
+API_KEY = "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"
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 @app.route("/", methods=["POST"])
