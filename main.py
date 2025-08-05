@@ -4,8 +4,8 @@ from twilio.twiml.messaging_response import MessagingResponse
 
 app = Flask(__name__)
 
-# ✅ Your actual OpenRouter API key (must be enabled and allowed to access the model)
-API_KEY = "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"
+# Your OpenRouter API details
+API_KEY = "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"  # 🔐 Replace with your actual OpenRouter API key
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 @app.route("/", methods=["POST"])
@@ -13,55 +13,49 @@ def bot_reply():
     incoming_msg = request.values.get("Body", "").strip()
     print(f"Received message: {incoming_msg}")
 
-    reply = "Sorry, no reply from AI."
+    reply = "Sorry, no response from AI."
 
-    # 🔧 Payload for OpenRouter
+    # The improved system prompt to ensure clear legal aid responses
+    system_prompt = (
+        "You are LegalBot, a legal aid assistant helping ordinary people. "
+        "Always reply in easy-to-understand, non-technical Hindi + English mix. "
+        "Avoid legal jargon. Keep replies short and helpful like a human legal advisor."
+    )
+
+    # Request payload
     data = {
-        "model": "openai/gpt-3.5-turbo",  # ✅ You can test with "mistralai/mistral-7b" if needed
+        "model": "openai/gpt-3.5-turbo",
         "messages": [
-            {
-                "role": "system",
-                "content": (
-                    "You are a helpful legal aid assistant. "
-                    "Reply concisely in simple, easy-to-understand language. "
-                    "Avoid legal jargon. Give helpful answers that a common person can understand."
-                )
-            },
-            {
-                "role": "user",
-                "content": incoming_msg
-            }
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": incoming_msg}
         ]
     }
 
-    # 🔐 Proper headers with required Referer and X-Title
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://legal-aid-ai.onrender.com",  # ✅ Use your actual Render domain
-        "X-Title": "WhatsApp Legal Bot"  # Optional but recommended
+        "HTTP-Referer": "https://legal-aid-ai.onrender.com",  # ✅ Must match your Render domain
+        "X-Title": "LegalBot WhatsApp Assistant"              # Optional but good for tracking
     }
 
-    # 🧠 Call OpenRouter
     try:
-        response = requests.post(API_URL, headers=headers, json=data)
+        response = requests.post(API_URL, json=data, headers=headers)
         result = response.json()
         print("API Response:", result)
 
-        if "choices" in result:
+        if "choices" in result and result["choices"]:
             reply = result["choices"][0]["message"]["content"].strip()
         else:
-            reply = "AI didn't respond. Please try again."
+            reply = "AI didn't respond properly. Try again later."
 
     except Exception as e:
         print(f"[OpenRouter Error] {e}")
-        reply = "Something went wrong while contacting AI."
+        reply = "Something went wrong contacting AI."
 
-    # 💬 Send back to WhatsApp via Twilio
     twilio_resp = MessagingResponse()
     twilio_resp.message(reply)
     return str(twilio_resp)
 
-# 🧪 Local testing only
+# Only for local testing
 if __name__ == "__main__":
     app.run(debug=True)
