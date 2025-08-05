@@ -16,26 +16,25 @@ def bot_reply():
     # Default fallback reply
     reply = "Sorry, no reply from AI."
 
-   data = {
-    "model": "openai/gpt-3.5-turbo",
-    "messages": [
-        {
-            "role": "system",
-            "content": "You are a helpful legal aid assistant. Reply concisely in easy-to-understand language, suitable for common people. Avoid technical jargon."
-        },
-        {
-            "role": "user",
-            "content": incoming_msg
-        }
-    ]
-}
-
+    data = {
+        "model": "openai/gpt-3.5-turbo",
+        "messages": [
+            {
+                "role": "system",
+                "content": "You are a helpful legal aid assistant. Reply concisely in easy-to-understand language, suitable for common people. Avoid technical jargon."
+            },
+            {
+                "role": "user",
+                "content": incoming_msg
+            }
+        ]
+    }
 
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://yourapp.com",        # ✅ Replace with your domain or leave as-is if testing
-        "X-Title": "Whatsapp Legal Bot"              # Optional, but helps OpenRouter routing
+        "HTTP-Referer": "https://yourapp.com",  # ✅ Optional, but can help routing
+        "X-Title": "Whatsapp Legal Bot"
     }
 
     try:
@@ -52,7 +51,7 @@ def bot_reply():
         print(f"[OpenRouter Error] {e}")
         reply = "Something went wrong while contacting AI."
 
-    # Send back to WhatsApp
+    # Send reply back to WhatsApp
     twilio_resp = MessagingResponse()
     twilio_resp.message(reply)
     return str(twilio_resp)
