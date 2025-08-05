@@ -4,7 +4,6 @@ from twilio.twiml.messaging_response import MessagingResponse
 
 app = Flask(__name__)
 
-# ✅ Your actual OpenRouter API key
 API_KEY = "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"
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
@@ -13,7 +12,6 @@ def bot_reply():
     incoming_msg = request.values.get("Body", "").strip()
     print(f"Received message: {incoming_msg}")
 
-    # Default fallback reply
     reply = "Sorry, no reply from AI."
 
     data = {
@@ -21,7 +19,7 @@ def bot_reply():
         "messages": [
             {
                 "role": "system",
-                "content": "You are a helpful legal aid assistant. Reply concisely in easy-to-understand language, suitable for common people. Avoid technical jargon."
+                "content": "You are a helpful legal aid assistant. Reply in simple, non-technical language suitable for everyone."
             },
             {
                 "role": "user",
@@ -33,7 +31,7 @@ def bot_reply():
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://yourapp.com",  # ✅ Optional, but can help routing
+        "HTTP-Referer": "https://whatsapp-legal-bot.onrender.com",  # 🔁 Your actual domain!
         "X-Title": "Whatsapp Legal Bot"
     }
 
@@ -51,7 +49,6 @@ def bot_reply():
         print(f"[OpenRouter Error] {e}")
         reply = "Something went wrong while contacting AI."
 
-    # Send reply back to WhatsApp
     twilio_resp = MessagingResponse()
     twilio_resp.message(reply)
     return str(twilio_resp)
