@@ -15,15 +15,13 @@ def bot_reply():
     reply = "Sorry, I couldn't respond right now."
 
    try:
-    response = client.chat.completions.create(
-        model="openrouter/openai/gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": incoming_msg}
-        ]
-    )
-
-    reply = response.choices[0].message.content.strip()
+        response = client.chat.completions.create(
+            model="openrouter/openai/gpt-3.5-turbo",
+            messages=[
+                 {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": incoming_msg} ])
+       reply = response.choices[0].message.content.strip()
+       
 
 except Exception as e:
     reply = "Sorry, something went wrong."
